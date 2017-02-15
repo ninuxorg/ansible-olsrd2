@@ -1,0 +1,6 @@
+---
+- name: restart olsrd2
+  become: true
+  service:
+    name: olsrd2
+    state: restarted

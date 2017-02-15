@@ -1,0 +1,13 @@
+- name: Ensure not executing as root
+  fail:
+    msg: "Cannot compile olsrd2 as root"
+  when: ansible_user == "root"
+  tags: [olsrd2, dependencies]
+
+# installs build dependencies and retrieves source code
+- include: 1-dependencies.yml
+  tags: [olsrd2, dependencies]
+
+# generates debian package and installs or upgrades it if necessary
+- include: 2-install.yml
+  tags: [olsrd2, install]

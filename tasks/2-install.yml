@@ -1,0 +1,61 @@
+- name: Update olsrd2 git repo
+  git:
+    repo: "{{ olsrd2_source_repo }}"
+    dest: "{{ olsrd2_source_dir }}"
+    version: "{{ olsrd2_source_version }}"
+
+- name: "set git user.email to {{ olsrd2_git_email }}"
+  git_config:
+    name: user.email
+    scope: global
+    value: "{{ olsrd2_git_email }}"
+
+- name: "set git user.name to {{ olsrd2_git_name }}"
+  git_config:
+    name: user.name
+    scope: global
+    value: "{{ olsrd2_git_name }}"
+
+- shell: 'git describe --abbrev=0 | sed -e "s/^v//"'
+  args:
+    chdir: "{{ olsrd2_source_dir }}/files"
+  register: _VERSION
+
+- shell: 'git rev-list v{{ _VERSION.stdout }}..HEAD --count'
+  args:
+    chdir: "{{ olsrd2_source_dir }}/files"
+  register: _VERSIONCOUNT
+
+- set_fact:
+    olsrd2_deb_file: "olsrd2_{{ _VERSION.stdout }}-{{ _VERSIONCOUNT.stdout }}_amd64.deb"
+
+- name: check if deb package has been already compiled
+  stat:
+    path: "{{ olsrd2_dir }}/{{ olsrd2_deb_file }}"
+  register: deb_package
+
+- name: launch ./create_debian_package.sh
+  when: not deb_package.stat.exists
+  shell: ./create_debian_package.sh
+  args:
+    chdir: "{{ olsrd2_source_dir }}/files"
+
+- name: "move deb package to {{ olsrd2_dir }}"
+  when: not deb_package.stat.exists
+  shell: "mv *.deb {{ olsrd2_dir }}"
+  args:
+    chdir: "{{ olsrd2_source_dir }}"
+
+- name: "install {{ olsrd2_deb_file }}"
+  when: not deb_package.stat.exists
+  become: true
+  apt:
+    deb: "{{ olsrd2_dir }}/{{ olsrd2_deb_file }}"
+  notify: [restart olsrd2]
+
+- name: configure olsrd2
+  become: true
+  template:
+    src: olsrd2.conf.j2
+    dest: /etc/olsrd2/olsrd2.conf
+  notify: [restart olsrd2]

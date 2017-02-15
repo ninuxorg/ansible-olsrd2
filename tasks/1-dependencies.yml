@@ -1,0 +1,18 @@
+- name: Update APT package cache
+  become: true
+  apt: update_cache=yes
+
+- name: Install/upgrade dependencies
+  become: true
+  package:
+    name: "{{ item }}"
+    state: latest
+  with_items: "{{ olsrd2_build_dependencies }}"
+
+- name: "Create {{ olsrd2_dir }}"
+  become: true
+  file:
+    path: "{{ olsrd2_dir }}"
+    state: directory
+    owner: "{{ ansible_user }}"
+    group: sudo

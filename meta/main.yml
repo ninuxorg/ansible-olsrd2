@@ -1,0 +1,22 @@
+---
+
+dependencies: []
+
+galaxy_info:
+  author: Federico Capoano
+  company: Ninux
+  description: compile, install and upgrade olsrd2 (also known as OLSR.org Network Framework)
+  license: BSD
+  min_ansible_version: 2.2
+  platforms:
+  - name: Debian
+    versions:
+    - wheezy
+    - jessie
+  - name: Ubuntu
+    versions:
+    - trusty
+    - xenial
+  galaxy_tags:
+    - system
+    - networking
