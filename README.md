@@ -7,6 +7,9 @@ Role Variables
 --------------
 
 ```yaml
+# interfaces OLSRd2 will bind to
+olsrd2_interfaces:
+    - eth0
 olsrd2_build_dependencies:
     - build-essential
     - libnl-3-dev
