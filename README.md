@@ -1,6 +1,8 @@
 ansible-olsrd2
 ==============
 
+[![Galaxy](http://img.shields.io/badge/galaxy-ninuxorg.olsrd2-blue.svg?style=flat-square)](https://galaxy.ansible.com/ninuxorg/olsrd2/)
+
 Automatically install and upgrade olsrd2 on debian based linux distributions via ansible.
 
 Role Variables
