@@ -2,7 +2,7 @@
   fail:
     msg: "Cannot compile olsrd2 as root"
   when: ansible_user == "root"
-  tags: [olsrd2, dependencies]
+  tags: [olsrd2, dependencies, install]
 
 # installs build dependencies and retrieves source code
 - include: 1-dependencies.yml
