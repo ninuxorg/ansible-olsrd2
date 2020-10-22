@@ -26,8 +26,16 @@
     chdir: "{{ olsrd2_source_dir }}/files"
   register: _VERSIONCOUNT
 
+- name: Get DEB architecture
+  shell: dpkg --print-architecture
+  register: deb_architecture
+
+- name: Print DEB architecture
+  debug:
+    msg: "deb_architecture.stdout: {{ deb_architecture.stdout }}"
+
 - set_fact:
-    olsrd2_deb_file: "olsrd2_{{ _VERSION.stdout }}-{{ _VERSIONCOUNT.stdout }}_amd64.deb"
+    olsrd2_deb_file: "olsrd2_{{ _VERSION.stdout }}-{{ _VERSIONCOUNT.stdout }}_{{ deb_architecture.stdout }}.deb"
 
 - name: check if deb package has been already compiled
   stat:
